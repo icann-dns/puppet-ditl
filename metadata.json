@@ -1,0 +1,24 @@
+{
+  "name": "puppet-ditl",
+  "version": "0.1.0",
+  "author": "john.bond@icann.org",
+  "summary": "Module to manage DNS-OARC DITL uploads",
+  "license": "Apache-2.0",
+  "source": "https://github.com/icann-dns/puppet-ditl",
+  "project_page": "https://github.com/icann-dns/puppet-ditl",
+  "issues_url": "https://github.com/icann-dns/puppet-ditl/issues",
+  "dependencies": [
+    {"name":"puppetlabs-stdlib","version_requirement":">= 4.11.0"},
+    {"name":"icann-tea","version_requirement":">= 0.2.4"}
+  ],
+  "operatingsystem_support": [
+    {
+      "operatingsystem" : "Ubuntu",
+      "operatingsystemrelease" : [ "12.0.4", "14.04" ]
+    },
+    {
+      "operatingsystem" : "FreeBSD",
+      "operatingsystemrelease" : [ "10" ]
+    }
+  ]
+}

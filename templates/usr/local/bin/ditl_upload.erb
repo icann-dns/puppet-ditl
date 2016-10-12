@@ -1,0 +1,77 @@
+#!/usr/bin/env bash
+
+# Copyright (c) 2013, Internet Corporation for Assigned Names and Numbers
+# 
+# Permission to use, copy, modify, and/or distribute this software for any
+# purpose with or without fee is hereby granted, provided that the above
+# copyright notice and this permission notice appear in all copies.
+#
+# THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+# WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+# MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+# ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+# WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+# ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+# OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+#
+# 2013 Dave Knight <dave@knig.ht>
+LOGGER="/usr/bin/logger -t ditl"
+PCAP_DIR=<%= @pcap_dir %>
+LOCK=/tmp/ditl.lock
+if [ -f ${LOCK} ]; then
+  echo "Lockfile ${LOCK} exists, exiting" | ${LOGGER}
+  exit
+else
+    echo $$ > ${LOCK}
+fi
+<%- if @clean_known_hosts -%>
+ssh-keygen -f "/root/.ssh/known_hosts" -R <%= @upload_host %>  >/dev/null 2>&1
+<%- end -%>
+
+SSH="/usr/bin/ssh
+       -4
+       -q
+       -o PasswordAuthentication=no
+       -o StrictHostKeyChecking=no
+       -o PreferredAuthentications=publickey
+       -i <%= @upload_key_file %>
+       <%= @upload_user %>@<%= @upload_host %>
+       ditl"
+
+for pcap in $(ls ${PCAP_DIR}/<%= @pattern %> 2>/dev/null); do
+
+  if [ -s ${pcap} ]; then
+
+    name=$(basename $(basename ${pcap} .pcap.bz2 ) .pcap.xz)
+    upload_name="<%= @fqdn %>-${name##*_}"
+	if [ -z "${name}" ] ; then exit 0 ; fi
+    done=${pcap}.done
+    fail=${pcap}.fail
+
+    if [ ! -f ${done} -a ! -f ${fail} ]; then
+    
+      md5=$( md5sum ${pcap} | awk '{print $1}' )
+  
+      echo "${name} upload ${md5}" | ${LOGGER} 
+      output=$( ${SSH} ${upload_name} ${md5} < ${pcap} )
+
+      if [ $? -eq 0 ]; then
+        echo "${name} upload ok" | ${LOGGER}
+        if [ "$output" = "MD5 ${md5}" ]; then
+          echo "${name} md5 ok" | ${LOGGER}
+          touch ${done}
+        else
+          echo "${name} md5 fail" | ${LOGGER}
+          touch ${fail}
+        fi
+      else
+        echo "${name} upload fail" | ${LOGGER}
+        touch ${fail}
+      fi
+    fi
+  else
+    echo "${name} is empty" | ${LOGGER}
+  fi
+done
+
+rm -f ${LOCK}
