@@ -90,7 +90,7 @@ Main class, includes all other classes
 * `pcap_dir` (Tea::Absolutepath, Default: '/opt/pcap'): The location of pcap files toupload
 * `upload_host` (Tea::Fqdn, Default: capture.ditl.dns-oarc.net): The host to upload DITL data to
 * `upload_key_file` (Tea::Absolutepath, Default: /root/.ssh/oarc_id_dsa): The location to stor the rsa private key
-* `clean_known_hosts` (Boolean Default: false): WARNING changing this value is a security risk effectivly meaning that the upload script will trust any host fingerprint its given and therefore sceseptible to MITM attacks.  Only change this value if you know what yuo are doing
+* `clean_known_hosts` (Boolean Default: false): WARNING changing this value is a security risk effectivly meaning that the upload script will trust any host fingerprint its given and therefore open to MITM attacks.  Only change this value if you know what you are doing
 
 ## Limitations
 
