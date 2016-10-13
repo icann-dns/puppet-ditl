@@ -26,8 +26,8 @@ This module installs ditl and can also manage the custom scripts, host script an
 ### What ditl affects
 
 * installs ssh key to the root user 
-* install a bash sctip to upload bcaps
-* install a cron job to upload bcaps
+* install a bash script to upload pcaps
+* install a cron job to upload pcaps
 
 ### Setup Requirements
 
@@ -36,32 +36,34 @@ This module installs ditl and can also manage the custom scripts, host script an
 
 ### Beginning with ditl
 
-just add the ditl class
+just add the ditl class and pass the two mandatory parameters `upload_key_source` and `upload_user`
 
 ```puppet
-class {'::ditl' }
+class {'::ditl' 
+  upload_key_source => 'puppet:///modules/module_files/upload_key_rsa',
+  upload_user       => 'ditl-user',
+}
 ```
 
 ## Usage
 
-### Add custom modules and scripts
+### Update pattern
 
-You can pass URI's which will be handed to puppet and passed to a file type source parameter.
-
+DITL will normaly have a start and stop time, we use the pattern barameter to bass a bash glob matching the pattern for the period.  for instance if the period starts on 2016-05-03 and ends 2016-05-06 then we would have the following 
 ```puppet
 class {'::ditl' 
-  hosts_script => 'puppet:///modules/submodule/my_ditl_scripts,
-  scripts => 'puppet:///modules/submodule/my_ditl_scripts,
-  modules => 'puppet:///modules/submodule/my_ditl_modules,
+  upload_key_source => 'puppet:///modules/module_files/upload_key_rsa',
+  upload_user       => 'ditl-user',
+  pattern           => '2016050{3..8}*.{bz2,xz}'
 }
 ```
 
 of with hiera
 
 ```yaml
-ditl::hosts_script: 'puppet:///modules/submodule/my_ditl_scripts,
-ditl::scripts: 'puppet:///modules/submodule/my_ditl_scripts,
-ditl::modules: 'puppet:///modules/submodule/my_ditl_modules,
+ditl::upload_key_source: 'puppet:///modules/module_files/upload_key_rsa',
+ditl::upload_user: 'ditl-user',
+ditl::pattern: '2016050{3..8}*.{bz2,xz}'
 ```
 
 ## Reference
