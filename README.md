@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/icann-ditl/puppet-ditl.svg?branch=master)](https://travis-ci.org/icann-ditl/puppet-ditl)
+[![Build Status](https://travis-ci.org/icann-dns/puppet-ditl.svg?branch=master)](https://travis-ci.org/icann-dns/puppet-ditl)
 [![Puppet Forge](https://img.shields.io/puppetforge/v/icann/ditl.svg?maxAge=2592000)](https://forge.puppet.com/icann/ditl)
 [![Puppet Forge Downloads](https://img.shields.io/puppetforge/dt/icann/ditl.svg?maxAge=2592000)](https://forge.puppet.com/icann/ditl)
 # ditl
