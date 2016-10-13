@@ -1,5 +1,5 @@
 {
-  "name": "puppet-ditl",
+  "name": "icann-ditl",
   "version": "0.1.0",
   "author": "john.bond@icann.org",
   "summary": "Module to manage DNS-OARC DITL uploads",
