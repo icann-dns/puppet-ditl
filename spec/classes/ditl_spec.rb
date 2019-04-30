@@ -62,6 +62,13 @@ describe 'ditl' do
           )
         end
         it do
+          is_expected.to contain_file('/usr/local/bin/ditl_retry').with(
+            ensure: 'present',
+            mode: '0755'
+          ).with_content(
+            %r{^PCAP_DIR=/opt/pcap}
+          )
+        it do
           is_expected.to contain_file('/root/.ssh/oarc_id_dsa').with(
             ensure: 'present',
             mode: '0600',
@@ -75,6 +82,15 @@ describe 'ditl' do
             user: 'root',
             minute: '*/10',
             require: 'File[/usr/local/bin/ditl_upload]'
+          )
+        end
+        it do
+          is_expected.to contain_cron('ditl_retry').with(
+            ensure: 'present',
+            command: '/usr/local/bin/ditl_retry',
+            user: 'root',
+            minute: '0',
+            require: 'File[/usr/local/bin/ditl_retry]'
           )
         end
       end
@@ -103,6 +119,7 @@ describe 'ditl' do
           before { params.merge!(enabled: false) }
           it { is_expected.to compile }
           it { is_expected.to contain_cron('ditl_upload').with_ensure('absent') }
+          it { is_expected.to contain_cron('ditl_retry').with_ensure('absent') }
           it do
             is_expected.to contain_file('/root/.ssh/oarc_id_dsa').with_ensure(
               'absent'
@@ -113,12 +130,22 @@ describe 'ditl' do
               'absent'
             )
           end
+          it do
+            is_expected.to contain_file('/usr/local/bin/ditl_retry').with_ensure(
+              'absent'
+            )
+          end
         end
         context 'pcap_dir' do
           before { params.merge!(pcap_dir: '/foo/bar') }
           it { is_expected.to compile }
           it do
             is_expected.to contain_file('/usr/local/bin/ditl_upload').with_content(
+              %r{^PCAP_DIR=/foo/bar}
+            )
+          end
+          it do
+            is_expected.to contain_file('/usr/local/bin/ditl_retry').with_content(
               %r{^PCAP_DIR=/foo/bar}
             )
           end
