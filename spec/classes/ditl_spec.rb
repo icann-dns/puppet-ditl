@@ -68,6 +68,7 @@ describe 'ditl' do
           ).with_content(
             %r{^PCAP_DIR=/opt/pcap}
           )
+        end
         it do
           is_expected.to contain_file('/root/.ssh/oarc_id_dsa').with(
             ensure: 'present',
