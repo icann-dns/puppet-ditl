@@ -36,7 +36,7 @@ class ditl (
     minute  => '*/10',
     require => File['/usr/local/bin/ditl_upload'];
   }
-  cron { 'dilt_retry':
+  cron { 'ditl_retry':
     ensure  => $ensure,
     command => '/usr/local/bin/ditl_retry',
     user    => root,
