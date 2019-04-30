@@ -1,0 +1,8 @@
+#!/bin/sh
+
+PCAP_DIR=<%= @pcap_dir %>  
+
+# Delete any failed flagged files to retry upload after 1 day
+
+find ${PCAP_DIR} -name *.fail -type f -mtime 1 -exec rm '{}' \; 2>/dev/null
+

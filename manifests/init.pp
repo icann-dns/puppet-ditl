@@ -19,6 +19,11 @@ class ditl (
     mode    => '0755',
     content => template('ditl/usr/local/bin/ditl_upload.erb');
   }
+  file {'/usr/local/bin/ditl_retry':
+    ensure  => $ensure,
+    mode    => '0755',
+    content => template('ditl/usr/local/bin/ditl_retry.erb');
+  }
   file{$upload_key_file:
     ensure => $ensure,
     mode   => '0600',
@@ -30,5 +35,12 @@ class ditl (
     user    => root,
     minute  => '*/10',
     require => File['/usr/local/bin/ditl_upload'];
+  }
+  cron { 'dilt_retry':
+    ensure  => $ensure,
+    command => '/usr/local/bin/ditl_retry',
+    user    => root,
+    minute  => '0',
+    require => File['/usr/local/bin/ditl_retry'];
   }
 }

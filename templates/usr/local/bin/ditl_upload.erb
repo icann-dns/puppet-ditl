@@ -56,9 +56,8 @@ for pcap in $(ls ${PCAP_DIR}/<%= @pattern %> 2>/dev/null); do
       output=$( ${SSH} ${upload_name} ${md5} < ${pcap} )
 
       if [ $? -eq 0 ]; then
-        echo "${name} upload ok" | ${LOGGER}
         if [ "$output" = "MD5 ${md5}" ]; then
-          echo "${name} md5 ok" | ${LOGGER}
+          echo "${name} upload ok" | ${LOGGER}
           touch ${done}
         else
           echo "${name} md5 fail" | ${LOGGER}
